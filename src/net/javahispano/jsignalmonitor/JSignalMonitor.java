@@ -29,7 +29,7 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
 
     static ResourceBundle res;
 
-  //El primero indica si ahora mismo es tiempo real, y el segundo si el cliente
+    //El primero indica si ahora mismo es tiempo real, y el segundo si el cliente
     //Pidi� tiempo real
     private boolean realTimeNow, realTimeDemadedyClient;
     private PanelAnnotation panel_anotacion;
@@ -57,8 +57,8 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
      * marcas y anotaciones para posicionarse en pantalla. Puede hacerse null en
      * cualquier caso.
      * @param cliente Cliente que va a proporcionar los datos a visualizar.
-     * @param numeroCanales Indica el numero de canales iniciales que va a
-     * tener la interfaz de monitorizacion. Puede ser 0.
+     * @param numeroCanales Indica el numero de canales iniciales que va a tener
+     * la interfaz de monitorizacion. Puede ser 0.
      * @param enablePos Indica para cada cadnal si se va a pintar la se�al en
      * ciertos tramos de un color distinto o no. El color simboliza, en
      * principio, una posibilidad de ocurrencia de un determinado evento sobre
@@ -70,7 +70,8 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
      * marcas, y si se va a visualizar el panel de las anotaciones.
      * @param fechaInicio Fecha que se corresponde con el inicio de la
      * monitorizacion. Al indicar una fehc ade inicio se asume que se emplear�n
-     * fechas, y no un �nice entero en la visualizaci�n de los datos. Formato: HH:mm:ss dd/MM/yyyy
+     * fechas, y no un �nice entero en la visualizaci�n de los datos. Formato:
+     * HH:mm:ss dd/MM/yyyy
      */
     public JSignalMonitor(JFrame frame, Client cliente, int numeroCanales,
             boolean[] enablePos, String[] nombreSenhal, boolean anotaciones,
@@ -88,8 +89,8 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
      * marcas y anotaciones para posicionarse en pantalla. Puede hacerse null en
      * cualquier caso.
      * @param cliente Cliente que va a proporcionar los datos a visualizar.
-     * @param numeroCanales Indica el numero de canales iniciales que va a
-     * tener la interfaz de monitorizacion. Puede ser 0.
+     * @param numeroCanales Indica el numero de canales iniciales que va a tener
+     * la interfaz de monitorizacion. Puede ser 0.
      * @param enablePos Indica para cada cadnal si se va a pintar la se�al en
      * ciertos tramos de un color distinto o no. El color simboliza, en
      * principio, una posibilidad de ocurrencia de un determinado evento sobre
@@ -109,44 +110,47 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
         res = ResourceBundle.getBundle("net.javahispano.jsignalmonitor.i18n.Res",
                 configuration.getLocalidad());
         this.frame = frame;
+        if (nombreSenhal == null) {
+
+            String[] nombre_senales = new String[numeroCanales];
+            for (int i = 0; i < numeroCanales; i++) {
+                nombre_senales[i] = res.getString("Se_al") + i;
+            }
+        configuration.setNombreSenales(nombre_senales);
+        }
         createMonitor(cliente, numeroCanales, enablePos, nombreSenhal, anotaciones);
         configuration.setFechaInicio(new Fecha(2000, 1, 1, 1, 1, 1));
         SamplesToDate.getInstancia().setFechaBase("01:01:01 01/01/2000");
-        String[] nombre_senales = new String[numeroCanales];
-        for (int i = 0; i < numeroCanales; i++) {
-            nombre_senales[i] = res.getString("Se_al") + i;
-        }
-        configuration.setNombreSenales(nombre_senales);
     }
-    
-  /**
+
+    /**
      * @param frame Frame en el cual se ha incluido el monitor. Si es un applet
      * o no se desea emplear las marcas y anotaciones hacer que este par�metro
      * sea null. Este dato es empleado �nicamente por las ventanas de definir
      * marcas y anotaciones para posicionarse en pantalla. Puede hacerse null en
      * cualquier caso.
      * @param cliente Cliente que va a proporcionar los datos a visualizar.
-     * @param numeroCanales Indica el numero de canales iniciales que va a
-     * tener la interfaz de monitorizacion. Puede ser 0.
+     * @param numeroCanales Indica el numero de canales iniciales que va a tener
+     * la interfaz de monitorizacion. Puede ser 0.
      * @param nombreSenhal Nombre de cada una de las se�ales que se esta
      * monitorizando. Se asume que la primera posicion del array contiene el
      * nombre de la primeraa se�al y asi sucesivamente.
      */
     public JSignalMonitor(JFrame frame, Client cliente, int numeroCanales,
-           String[] nombreSenhal) {
-       this(frame, cliente,numeroCanales,null, nombreSenhal, false);
+            String[] nombreSenhal) {
+        this(frame, cliente, numeroCanales, null, nombreSenhal, false);
     }
-    
+
     /**
      * @param cliente Cliente que va a proporcionar los datos a visualizar.
-     * @param numeroCanales Indica el numero de canales iniciales que va a
-     * tener la interfaz de monitorizacion. Puede ser 0.
+     * @param numeroCanales Indica el numero de canales iniciales que va a tener
+     * la interfaz de monitorizacion. Puede ser 0.
      * @param nombreSenhal Nombre de cada una de las se�ales que se esta
      * monitorizando. Se asume que la primera posicion del array contiene el
      * nombre de la primeraa se�al y asi sucesivamente.
      */
     public JSignalMonitor(Client cliente, int numeroCanales, String[] nombreSenhal) {
-       this(null, cliente,numeroCanales,null, nombreSenhal, false);
+        this(null, cliente, numeroCanales, null, nombreSenhal, false);
     }
 
     /**
@@ -240,12 +244,12 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
      * debe advertir mediante este m�todo al jSignalMonitor esta vez pas�ndole
      * como argumento false
      */
-    public void setRealTime(boolean b) {
-        if (b) {
+    public void setRealTime(boolean ralTime) {
+        if (ralTime) {
             scroll.setValue(scroll.getMaximum() - scroll.getVisibleAmount());
         }
-        this.realTimeNow = b;
-        this.realTimeDemadedyClient = b;
+        this.realTimeNow = ralTime;
+        this.realTimeDemadedyClient = ralTime;
     }
 
     /**
@@ -266,7 +270,7 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
      * @param canal int
      * @param rango float[]
      */
-    public void setRange(int canal, float[] rango) {
+    public void setYAxisVisualizationRange(int canal, float[] rango) {
         configuration.setRangoSenales(canal, rango);
     }
 
@@ -309,7 +313,7 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
              }*/
             //Por la escala temporal
             int num_datos = ultimo - primero;
-      // int num_datos_a_pedir = num_datos /Configuracion.escalado_temporal-1 ;
+            // int num_datos_a_pedir = num_datos /Configuracion.escalado_temporal-1 ;
             // ultimo = primero + num_datos_a_pedir;
             int escaladoTemporal = configuration.getEscaladoTemporal();
             ultimo = ultimo / escaladoTemporal - 1;
@@ -333,7 +337,7 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
                 tmp = datos_escalados;
             }
 
-      //Por la escala temporal
+            //Por la escala temporal
             //Actualizamos la fecha de configuracion
             Fecha fecha = Fecha.getCopiaFecha(configuration.getFechaInicio());
             fecha.add(GregorianCalendar.SECOND,
@@ -473,7 +477,7 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
         jSplitPane1.setOrientation(JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setLeftComponent(null);
         scroll.setOrientation(JScrollBar.HORIZONTAL);
-    // panel_anadir_anotaciones.setLayout(borderLayout2);
+        // panel_anadir_anotaciones.setLayout(borderLayout2);
         //   panel_anadir_anotaciones.setPreferredSize(new Dimension(100,80));
         //  panel_anadir_anotaciones.setForeground(Color.white);
         panel.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -539,7 +543,7 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
         }
         configuration.setNombreSenales(nuevoNumCanales - 1, nombre_senhal);
 
-    //Este codigo es para registrar los escuchadores de rat�n sobre el panel
+        //Este codigo es para registrar los escuchadores de rat�n sobre el panel
         //de anotaciones
         if (configuration.isPintarAnotaciones()) {
             panel_anotacion.addMouseMotionListener(panel.getPanelPintar(
@@ -576,7 +580,7 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
         }
         configuration.setNombreSenales(nuevoNumCanales - 1, nombre_senhal);
 
-    //Este codigo es para registrar los escuchadores de rat�n sobre el panel
+        //Este codigo es para registrar los escuchadores de rat�n sobre el panel
         //de anotaciones
         if (configuration.isPintarAnotaciones()) {
             panel_anotacion.addMouseMotionListener(panel.getPanelPintar(
@@ -1039,7 +1043,7 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
      */
     public void setTemporalScale(int factor) {
         configuration.setEscaladoTemporal(factor);
-    //Como todas tienen la misma frecuencia cojo una cualquiera
+        //Como todas tienen la misma frecuencia cojo una cualquiera
         // this.setTodasLasFrecuencias(Configuracion.fs[0] * factor / factor_antiguo);
         for (int i = 0; i < configuration.getFs().length; i++) {
             this.setFs(i, configuration.getFs(i) * factor / lastTemporalScale);
@@ -1340,7 +1344,7 @@ public class JSignalMonitor extends JPanel implements AdjustmentListener {
      * @todo Implement this java.awt.event.AdjustmentListener method
      */
     public void adjustmentValueChanged(AdjustmentEvent e) {
-    //   System.out.println("val " + scroll.getValue() + " min " + scroll.getMinimum() +
+        //   System.out.println("val " + scroll.getValue() + " min " + scroll.getMinimum() +
         //                      " max " + scroll.getMaximum() + " extet " +
         //                      scroll.getVisibleAmount());
         if (!realTimeDemadedyClient) {
